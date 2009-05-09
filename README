@@ -1,0 +1,10 @@
+Time Management allows you to keep track of what you are doing on your PC. 
+I plan on using it to help me fill out my timesheet at the office. 
+The application resides in the systray, and writes to a CSV file each 
+time you switch applications, or the title bar of the current app changes.
+
+File format:
+[date],[time],[process name],[window title],[duration used]
+
+There is no built in reporting capability, but a simple Excel pivot table produces a 
+spectacular table and chart. I'd assume Open Office has a similar feature.
