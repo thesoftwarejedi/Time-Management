@@ -8,7 +8,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace AnAppADay.TimeManagement.WinApp
+namespace TimeManagement.WinApp
 {
     static class Program
     {
@@ -31,6 +31,7 @@ namespace AnAppADay.TimeManagement.WinApp
         private static IntPtr desktopWin;
 
         internal static string filename;
+        static IManagementDB tmDB = new ManagementDB("TimeManagement.db");
 
         [STAThread]
         static void Main()
@@ -39,13 +40,12 @@ namespace AnAppADay.TimeManagement.WinApp
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-
                 desktopWin = GetDesktopWindow();
 
                 //read config file
                 try
                 {
-                    using (FileStream iniIn = new FileStream("AnAppADay.TimeManagement.WinApp.jedi", FileMode.Open, FileAccess.Read))
+                    using (FileStream iniIn = new FileStream("TimeManagement.WinApp.jedi", FileMode.Open, FileAccess.Read))
                     {
                         using (StreamReader iniRead = new StreamReader(iniIn))
                         {
@@ -58,9 +58,6 @@ namespace AnAppADay.TimeManagement.WinApp
                 {
                     filename = "TimeManagement.csv";
                 }
-
-                //setup the output file
-                OpenOutputFile();
 
                 //setup the systray
                 ntfy = new NotifyIcon();
@@ -90,27 +87,6 @@ namespace AnAppADay.TimeManagement.WinApp
             }
         }
 
-        internal static void OpenOutputFile()
-        {
-            lock (writeMutex)
-            {
-                try
-                {
-                    if (write != null)
-                    {
-                        write.Close();
-                    }
-                    write = new StreamWriter(new FileStream(filename, FileMode.Append, FileAccess.Write));
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Couldn't open output file, will use default");
-                    write = new StreamWriter(new FileStream("TimeManagement.csv", FileMode.Append, FileAccess.Write, FileShare.Read));
-                }
-                write.WriteLine();
-            }
-        }
-
         static void Options_Select(object sender, EventArgs e)
         {
             OptionsForm fmr = new OptionsForm();
@@ -119,7 +95,7 @@ namespace AnAppADay.TimeManagement.WinApp
 
         static void About_Select(object sender, EventArgs e)
         {
-            Process.Start("http://www.AnAppADay.com/");
+            MessageBox.Show("http://www.AnAppADay.com/");
         }
 
         static void Exit_Select(object sender, EventArgs e)
@@ -129,7 +105,7 @@ namespace AnAppADay.TimeManagement.WinApp
             STOP = true;
             //let the other thread exit
             Thread.Sleep(pollRate + 1000);
-            write.Close();
+            //write.Close();
             Application.Exit();
             System.Environment.Exit(0);
         }
@@ -172,7 +148,7 @@ namespace AnAppADay.TimeManagement.WinApp
                         if (lastEntry.procName != null)
                         {
                             lastEntry.timeSpan = DateTime.Now - lastEntry.dateTime;
-                            WriteLastEntry();
+                            tmDB.InsertRecordEntry(lastEntry);
                         }
                         uint procId;
                         GetWindowThreadProcessId(win, out procId);
@@ -193,38 +169,6 @@ namespace AnAppADay.TimeManagement.WinApp
                     Thread.Sleep(pollRate);
                 }
             }
-        }
-
-        private static void WriteLastEntry()
-        {
-            lock (writeMutex)
-            {
-                write.WriteLine(lastEntry);
-                write.Flush();
-            }
-        }
-    }
-
-    struct RecordEntry
-    {
-        public DateTime dateTime;
-        public string procName;
-        public string title;
-        public TimeSpan timeSpan;
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(dateTime.ToString("MM/dd/yyyy"));
-            sb.Append(",");
-            sb.Append(dateTime.ToString("HH:mm:ss"));
-            sb.Append(",");
-            sb.Append(procName);
-            sb.Append(",");
-            sb.Append(title);
-            sb.Append(",");
-            sb.Append(timeSpan.TotalMinutes);
-            return sb.ToString();
         }
     }
 }
