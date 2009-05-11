@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TimeManagement.WinApp
 {
-    struct RecordEntry
+    public struct RecordEntry
     {
         public DateTime dateTime;
         public string procName;
