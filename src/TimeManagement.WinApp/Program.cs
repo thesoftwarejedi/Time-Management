@@ -14,24 +14,8 @@ namespace TimeManagement.WinApp
     {
 
         static NotifyIcon ntfy;
-        static Thread _t;
-        static StreamWriter write;
-        static object writeMutex = new object();
-
-        const uint GA_PARENT = 1;
-        const uint GA_ROOT = 2;
-        const uint GA_ROOTOWNER = 3;
-
-        static IntPtr lastWin = IntPtr.Zero;
-        static RecordEntry lastEntry;
-
         internal static int pollRate = 5000;
-
-        private static bool STOP = false;
-        private static IntPtr desktopWin;
-
-        internal static string filename;
-        static IManagementDB tmDB = new ManagementDB("TimeManagement.db");
+        static RecorderServer recorder;
 
         [STAThread]
         static void Main()
@@ -40,25 +24,7 @@ namespace TimeManagement.WinApp
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                desktopWin = WinOps.GetDesktopWindow();
-
-                //read config file
-                //try
-                //{
-                //    using (FileStream iniIn = new FileStream("TimeManagement.WinApp.jedi", FileMode.Open, FileAccess.Read))
-                //    {
-                //        using (StreamReader iniRead = new StreamReader(iniIn))
-                //        {
-                //            pollRate = Int32.Parse(iniRead.ReadLine());
-                //            filename = iniRead.ReadLine();
-                //        }
-                //    }
-                //}
-                //catch (Exception)
-                //{
-                //    filename = "TimeManagement.csv";
-                //}
-
+                recorder = new RecorderServer();
                 //setup the systray
                 ntfy = new NotifyIcon();
                 MenuItem[] menuItems = new MenuItem[3];
@@ -73,11 +39,7 @@ namespace TimeManagement.WinApp
                 System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
                 ntfy.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
                 ntfy.Visible = true;
-
-                //start watching the apps
-                _t = new Thread(RecordApplications);
-                _t.Start();
-
+                recorder.Start();
                 //start the gui msg loop
                 Application.Run();
             }
@@ -102,58 +64,9 @@ namespace TimeManagement.WinApp
         {
             ntfy.Visible = false;
             ntfy.Dispose();
-            STOP = true;
-            //let the other thread exit
-            Thread.Sleep(pollRate + 1000);
-            //write.Close();
+            recorder.Stop();
             Application.Exit();
             System.Environment.Exit(0);
-        }
-
-        static void RecordApplications()
-        {
-            while (!STOP)
-            {
-                try
-                {
-                    //get the process window name and exe name
-                    IntPtr tempWin = WinOps.GetForegroundWindow();
-                    IntPtr win = tempWin;
-                    while (tempWin != IntPtr.Zero && tempWin != desktopWin)
-                    {
-                        win = tempWin;
-                        tempWin = WinOps.GetAncestor(tempWin, GA_PARENT);
-                    }
-                    StringBuilder sb = new StringBuilder();
-                    WinOps.GetWindowText(win, sb, 150);
-                    string title = sb.ToString();
-                    if (win != lastWin || title != lastEntry.title)
-                    {
-                        lastWin = win;
-                        if (lastEntry.procName != null)
-                        {
-                            lastEntry.timeSpan = DateTime.Now - lastEntry.dateTime;
-                            tmDB.InsertRecordEntry(lastEntry);
-                        }
-                        uint procId;
-                        WinOps.GetWindowThreadProcessId(win, out procId);
-                        Process p = Process.GetProcessById((int)procId);
-                        string procName = p.ProcessName;
-                        //now title is the win title and procName is the EXE
-                        lastEntry.dateTime = DateTime.Now;
-                        lastEntry.procName = procName;
-                        lastEntry.title = title;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message + Environment.NewLine + "The application will retry..." + Environment.NewLine + ex.StackTrace + Environment.NewLine);
-                }
-                finally
-                {
-                    Thread.Sleep(pollRate);
-                }
-            }
         }
     }
 }
