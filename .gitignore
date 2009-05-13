@@ -1,0 +1,5 @@
+*.suo
+bin/
+obj/
+UpgradeLog.XML
+_UpgradeReport_Files/
