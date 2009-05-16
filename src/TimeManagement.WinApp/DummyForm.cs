@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Forms;
+
+namespace TimeManagement.WinApp
+{
+
+    public class DummyForm : Form
+    {
+        public void ExitApp()
+        {
+            Application.Exit();
+        }
+    }
+}
