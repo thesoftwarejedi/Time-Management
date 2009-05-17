@@ -46,6 +46,15 @@ namespace TimeManagement.WinApp
             }
         }
 
+        private void Report_Click(object sender, EventArgs e)
+        {
+            if (ReportEvent != null)
+            {
+                this.reportMonitor.Checked = !this.reportMonitor.Checked;
+                ReportEvent(sender, e);
+            }
+        }
+
         private void Exit_Click(object sender, EventArgs e)
         {
             if (ExitEvent != null)
@@ -61,6 +70,8 @@ namespace TimeManagement.WinApp
         public event EventHandler StopEvent;
 
         public event EventHandler StartEvent;
+
+        public event EventHandler ReportEvent;
 
         public event EventHandler ExitEvent;
 

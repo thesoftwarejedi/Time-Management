@@ -33,12 +33,16 @@
             this.innerMainPanel = new System.Windows.Forms.Panel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.timeReportChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.refreshButton = new System.Windows.Forms.Button();
+            this.timeCardDataGrid = new System.Windows.Forms.DataGridView();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.refreshButton = new System.Windows.Forms.ToolStripButton();
             this.innerMainPanel.SuspendLayout();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeReportChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeCardDataGrid)).BeginInit();
+            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // innerMainPanel
@@ -48,14 +52,13 @@
             this.innerMainPanel.Location = new System.Drawing.Point(5, 5);
             this.innerMainPanel.Name = "innerMainPanel";
             this.innerMainPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.innerMainPanel.Size = new System.Drawing.Size(574, 398);
+            this.innerMainPanel.Size = new System.Drawing.Size(479, 450);
             this.innerMainPanel.TabIndex = 0;
             // 
             // splitContainer
             // 
             this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer.IsSplitterFixed = true;
             this.splitContainer.Location = new System.Drawing.Point(5, 5);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -66,9 +69,9 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.refreshButton);
-            this.splitContainer.Size = new System.Drawing.Size(564, 388);
-            this.splitContainer.SplitterDistance = 322;
+            this.splitContainer.Panel2.Controls.Add(this.timeCardDataGrid);
+            this.splitContainer.Size = new System.Drawing.Size(469, 440);
+            this.splitContainer.SplitterDistance = 311;
             this.splitContainer.TabIndex = 0;
             // 
             // timeReportChart
@@ -81,26 +84,51 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.timeReportChart.Series.Add(series1);
-            this.timeReportChart.Size = new System.Drawing.Size(564, 322);
+            this.timeReportChart.Size = new System.Drawing.Size(469, 311);
             this.timeReportChart.TabIndex = 0;
             this.timeReportChart.Text = "chart1";
             // 
+            // timeCardDataGrid
+            // 
+            this.timeCardDataGrid.AllowUserToAddRows = false;
+            this.timeCardDataGrid.AllowUserToDeleteRows = false;
+            this.timeCardDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.timeCardDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.timeCardDataGrid.Location = new System.Drawing.Point(0, 0);
+            this.timeCardDataGrid.Name = "timeCardDataGrid";
+            this.timeCardDataGrid.ReadOnly = true;
+            this.timeCardDataGrid.Size = new System.Drawing.Size(469, 125);
+            this.timeCardDataGrid.TabIndex = 0;
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshButton});
+            this.toolStrip.Location = new System.Drawing.Point(5, 5);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+            this.toolStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.toolStrip.Size = new System.Drawing.Size(479, 25);
+            this.toolStrip.TabIndex = 1;
+            this.toolStrip.Text = "toolStrip1";
+            // 
             // refreshButton
             // 
-            this.refreshButton.Location = new System.Drawing.Point(435, 20);
+            this.refreshButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.refreshButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(75, 23);
-            this.refreshButton.TabIndex = 0;
+            this.refreshButton.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.refreshButton.Size = new System.Drawing.Size(50, 22);
             this.refreshButton.Text = "Refresh";
-            this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
             // TimeCardReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 408);
+            this.ClientSize = new System.Drawing.Size(489, 460);
             this.ControlBox = false;
+            this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.innerMainPanel);
             this.Name = "TimeCardReport";
             this.Padding = new System.Windows.Forms.Padding(5);
@@ -110,7 +138,11 @@
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.timeReportChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeCardDataGrid)).EndInit();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -119,6 +151,8 @@
         private System.Windows.Forms.Panel innerMainPanel;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.DataVisualization.Charting.Chart timeReportChart;
-        private System.Windows.Forms.Button refreshButton;
+        private System.Windows.Forms.ToolStrip toolStrip;
+        private System.Windows.Forms.ToolStripButton refreshButton;
+        private System.Windows.Forms.DataGridView timeCardDataGrid;
     }
 }

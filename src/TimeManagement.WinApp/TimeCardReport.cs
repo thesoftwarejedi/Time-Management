@@ -28,10 +28,32 @@ namespace TimeManagement.WinApp
 
         }
 
-        public void PopulateGraph(DataSet data)
+
+        public DataGridView TimeCardDataGrid
         {
-            DataView view = new DataView(data.Tables[0]);
-            this.timeReportChart.Series[0].Points.DataBindXY(view, "Title", view, "Duration");
+            get { return this.timeCardDataGrid; }
+            set
+            {
+                if (this.timeCardDataGrid != value)
+                    this.timeCardDataGrid = value;
+            }
+        }
+
+
+        public Chart TimeCardChart
+        {
+            get { return this.timeReportChart; }
+            set
+            {
+                if (this.timeReportChart != value)
+                    this.timeReportChart = value;
+            }
+        }
+
+        public void PopulateData(DataSet data)
+        {
+            //DataView view = new DataView(data.Tables[0]);
+            //this.timeReportChart.Series[0].Points.DataBindXY(view, "Title", view, "Duration");
         }
 
         public void ExitApp()

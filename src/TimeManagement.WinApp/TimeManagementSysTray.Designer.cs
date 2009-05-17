@@ -62,6 +62,7 @@
             this.reportMonitor.Name = "reportMonitor";
             this.reportMonitor.Size = new System.Drawing.Size(161, 22);
             this.reportMonitor.Text = "Report";
+            this.reportMonitor.Click+=new System.EventHandler(Report_Click);
             // 
             // startMonitoring
             // 

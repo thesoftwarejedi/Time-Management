@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.Data;
 
 namespace Recorder
 {
-    public class RecorderServer
+    public class RecorderServer : IRecorderServer
     {
         private Thread recorderThread;
         private string dbFilename;
@@ -20,7 +21,7 @@ namespace Recorder
         private int pollRate;
         private bool RUN = true;
 
-        public RecorderServer() : this("tm.db") { }
+        public RecorderServer() : this("TimeManagement.db") { }
         public RecorderServer(string dbFilename) : this(dbFilename, 5000) { }
         public RecorderServer(string dbFilename, int pollRate)
         {
@@ -89,6 +90,14 @@ namespace Recorder
         {
             this.RUN = false;
             Thread.Sleep(this.pollRate + 1000);
+        }
+
+        public bool IsRunning { get { return this.RUN; } }
+
+
+        public DataSet GetReport()
+        {
+            return tmDb.GetTodaysReport();
         }
     }
 }
