@@ -6,6 +6,9 @@ namespace TimeManagement.WinApp
 {
     public interface ITimeManageSysTray
     {
+        bool StartEnabled { set; }
+        bool StopEnabled { set; }
+
         event EventHandler ReportEvent;
         event EventHandler StopEvent;
         event EventHandler StartEvent;

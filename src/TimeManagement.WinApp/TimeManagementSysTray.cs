@@ -12,7 +12,6 @@ namespace TimeManagement.WinApp
         public TimeManagementSysTray()
         {
             InitializeComponent();
-            ServerStoppedButtons();
         }
 
         public TimeManagementSysTray(IContainer container)
@@ -20,7 +19,6 @@ namespace TimeManagement.WinApp
             container.Add(this);
 
             InitializeComponent();
-            ServerStoppedButtons();
         }
 
         private void About_Click(object sender, EventArgs e)
@@ -33,7 +31,6 @@ namespace TimeManagement.WinApp
             if (StartEvent != null)
             {
                 StartEvent(sender, e);
-                ServerRunningButtons();
             }
         }
 
@@ -42,7 +39,6 @@ namespace TimeManagement.WinApp
             if (StopEvent != null)
             {
                 StopEvent(sender, e);
-                ServerStoppedButtons();
             }
         }
 
@@ -59,13 +55,30 @@ namespace TimeManagement.WinApp
         {
             if (ExitEvent != null)
             {
-                ServerStoppedButtons();
-                this.timeManagementIcon.Visible = false;
                 ExitEvent(sender, e);
+                this.timeManagementIcon.Visible = false;
             }
         }
 
         #region ITimeManageSysTray Members
+
+        public bool StartEnabled
+        {
+            set
+            {
+                if (this.startMonitoring.Enabled != value)
+                    this.startMonitoring.Enabled = value;
+            }
+        }
+
+        public bool StopEnabled
+        {
+            set
+            {
+                if (this.stopMonitoring.Enabled != value)
+                    this.stopMonitoring.Enabled = value;
+            }
+        }
 
         public event EventHandler StopEvent;
 
@@ -76,18 +89,5 @@ namespace TimeManagement.WinApp
         public event EventHandler ExitEvent;
 
         #endregion
-
-
-        private void ServerRunningButtons()
-        {
-            this.startMonitoring.Enabled = false;
-            this.stopMonitoring.Enabled = true;
-        }
-
-        private void ServerStoppedButtons()
-        {
-            this.stopMonitoring.Enabled = false;
-            this.startMonitoring.Enabled = true;
-        }
     }
 }

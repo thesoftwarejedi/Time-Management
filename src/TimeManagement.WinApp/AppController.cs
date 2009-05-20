@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Recorder;
 using System.Data;
+using Recorder;
 
 namespace TimeManagement.WinApp
 {
@@ -17,6 +17,8 @@ namespace TimeManagement.WinApp
             this.recorder = recorder;
             this.report = report;
             WireItems();
+            BindItems();
+            ControlsOnServerOff();
         }
 
         private void WireItems()
@@ -25,18 +27,23 @@ namespace TimeManagement.WinApp
             this.sysTray.ExitEvent += new EventHandler(sysTray_ExitEvent);
             this.sysTray.StartEvent += new EventHandler(sysTray_StartEvent);
             this.sysTray.StopEvent += new EventHandler(sysTray_StopEvent);
-            this.report.RefreshEventClick += new EventHandler(report_RefreshEventClick);
-            this.report.TimeCardChart.DataSource = this.recorder.GetReport();
+            this.report.RefreshEventClick += new EventHandler(report_RefreshEventClick);   
+        }
+
+        private void BindItems()
+        {
+            DataSet ds = this.recorder.GetReport();
+            this.report.TimeCardChart.DataSource = ds;
             this.report.TimeCardChart.DataBind();
             this.report.TimeCardChart.Series[0].XValueMember = "Program";
             this.report.TimeCardChart.Series[0].YValueMembers = "Total Time";
-            this.report.TimeCardDataGrid.DataSource = this.recorder.GetReport();
+            this.report.TimeCardDataGrid.DataSource = ds;
             this.report.TimeCardDataGrid.DataMember = "RecordEntries";
         }
 
         private void report_RefreshEventClick(object sender, EventArgs e)
         {
-            this.report.PopulateData(this.recorder.GetReport());
+            this.BindItems();
         }
 
         private void sysTray_ReportEvent(object sender, EventArgs e)
@@ -47,17 +54,39 @@ namespace TimeManagement.WinApp
         private void sysTray_StopEvent(object sender, EventArgs e)
         {
             this.recorder.Stop();
+            this.ControlsOnServerOff();
         }
 
         private void sysTray_StartEvent(object sender, EventArgs e)
         {
             this.recorder.Start();
+            this.ControlsOnServerRunning();
         }
 
         private void sysTray_ExitEvent(object sender, EventArgs e)
         {
             this.recorder.Stop();
+            this.AllControlsOff();
             this.report.ExitApp();
+        }
+
+
+        private void AllControlsOff()
+        {
+            this.sysTray.StartEnabled = false;
+            this.sysTray.StopEnabled = false;
+        }
+
+        private void ControlsOnServerRunning()
+        {
+            this.sysTray.StartEnabled = false;
+            this.sysTray.StopEnabled = true;
+        }
+
+        private void ControlsOnServerOff()
+        {
+            this.sysTray.StartEnabled = true;
+            this.sysTray.StopEnabled = false;
         }
     }
 }

@@ -7,6 +7,12 @@ using System.Data;
 
 namespace Recorder
 {
+    /// <summary>
+    /// RecorderServer polls the active window for any changes.  If any changes
+    /// have occured, they're entered into the database file.
+    /// 
+    /// A lot of the original code by Dana Hanna resides here.
+    /// </summary>
     public class RecorderServer : IRecorderServer
     {
         private Thread recorderThread;
@@ -91,6 +97,7 @@ namespace Recorder
             this.RUN = false;
             Thread.Sleep(this.pollRate + 1000);
         }
+
 
         public bool IsRunning { get { return this.RUN; } }
 

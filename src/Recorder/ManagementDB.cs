@@ -92,7 +92,7 @@ namespace Recorder
         public DataSet GetTodaysReport()
         {
             DataSet dataSet = new DataSet();
-            string commandText = string.Format("SELECT ProcName||Title AS Program, SUM(Duration) AS 'Total Time' FROM {0} WHERE RecordDate >= @TodaysDate GROUP BY Program;", RecordTableName);
+            string commandText = string.Format("SELECT ProcName||Title AS Program, SUM(Duration) AS 'Total Time' FROM {0} WHERE RecordDate >= @TodaysDate GROUP BY Program ORDER BY 'Total Time';", RecordTableName);
             SQLiteCommand command = new SQLiteCommand(commandText, this.Connection);
             Console.WriteLine("date being sent {0}", DateTime.Today.Date);
             command.Parameters.Add(new SQLiteParameter("@TodaysDate", DateTime.Today.Date));
