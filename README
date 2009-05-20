@@ -1,4 +1,5 @@
 Time Management, originally by Dana Hanna, tracks how much time you spend on each application
 on your PC.  The application resides in the systray, and writes to a SQLite db file each time
 you switch applications, or the title bar of the current app changes.  From this, the
-application creates a report of how much time you've spent during the day on certain items.
+application creates a report of how much time you've spent during the day on titled
+applications.
