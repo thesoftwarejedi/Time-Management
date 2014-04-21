@@ -22,6 +22,9 @@ namespace AnAppADay.TimeManagement.WinApp
         const uint GA_ROOT = 2;
         const uint GA_ROOTOWNER = 3;
 
+        private const UInt32 WM_GETTEXTLENGTH = 0x000E;
+        private const UInt32 WM_GETTEXT = 0x000D;
+
         static IntPtr lastWin = IntPtr.Zero;
         static RecordEntry lastEntry;
 
@@ -138,7 +141,16 @@ namespace AnAppADay.TimeManagement.WinApp
         static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetWindowText(IntPtr hWnd, [Out] StringBuilder lpString, int nMaxCount);
+        static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, [Out] StringBuilder lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr whoKnows);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
@@ -163,9 +175,7 @@ namespace AnAppADay.TimeManagement.WinApp
                         win = tempWin;
                         tempWin = GetAncestor(tempWin, GA_PARENT);
                     }
-                    StringBuilder sb = new StringBuilder();
-                    GetWindowText(win, sb, 150);
-                    string title = sb.ToString();
+                    string title = GetWindowTextRaw(win);
                     if (win != lastWin || title != lastEntry.title)
                     {
                         lastWin = win;
@@ -193,6 +203,15 @@ namespace AnAppADay.TimeManagement.WinApp
                     Thread.Sleep(pollRate);
                 }
             }
+        }
+
+        public static string GetWindowTextRaw(IntPtr hwnd)
+        {
+            // Allocate correct string length first
+            int length = (int)SendMessage(hwnd, WM_GETTEXTLENGTH, IntPtr.Zero, IntPtr.Zero);
+            StringBuilder sb = new StringBuilder(length + 1);
+            SendMessage(hwnd, WM_GETTEXT, (IntPtr)sb.Capacity, sb);
+            return sb.ToString();
         }
 
         private static void WriteLastEntry()
