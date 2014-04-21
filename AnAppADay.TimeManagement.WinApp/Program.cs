@@ -239,9 +239,9 @@ namespace AnAppADay.TimeManagement.WinApp
             sb.Append(dateTime.ToString("HH:mm:ss"));
             sb.Append(",");
             sb.Append(procName);
-            sb.Append(",");
-            sb.Append(title);
-            sb.Append(",");
+            sb.Append(",\"");
+            sb.Append(title.Replace("\"", "\"\""));
+            sb.Append("\",");
             sb.Append(timeSpan.TotalMinutes);
             return sb.ToString();
         }
