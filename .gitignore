@@ -1,0 +1,9 @@
+*.exe
+*.pdb
+*.manifest
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+AnAppADay.TimeManagement.WinApp/TimeReporting.xlsx
